@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pe.edu.upeu.asistencia.services;
 
 import java.util.HashMap;
@@ -9,10 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.asistencia.exceptions.AppException;
+
 import pe.edu.upeu.asistencia.exceptions.ResourceNotFoundException;
+
 import pe.edu.upeu.asistencia.models.Actividad;
 import pe.edu.upeu.asistencia.repositories.ActividadRepository;
 
+/**
+ *
+ * @author DELL
+ */
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -20,6 +30,8 @@ public class ActividadServiceImp implements ActividadService{
 
     @Autowired
     private ActividadRepository actividadRepo;
+
+
     
     @Override
     public Actividad save(Actividad activiad) {
@@ -62,6 +74,7 @@ public class ActividadServiceImp implements ActividadService{
     public Actividad update(Actividad activiad, Long id) {
         Actividad actividadx = actividadRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Periodo not exist with id :" + id));
+        actividadx.setNombreActividad(activiad.getNombreActividad());
         actividadx.setFecha(activiad.getFecha());
         actividadx.setHorai(activiad.getHorai());        
         actividadx.setEstado(activiad.getEstado());

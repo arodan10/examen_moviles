@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.asistencia.models.Inscrito;
 import pe.edu.upeu.asistencia.services.InscritoService;
 
+/**
+ *
+ * @author DELL
+ */
 @RestController
 @RequestMapping("/asis/inscrito")
 public class InscritoController {

@@ -51,10 +51,10 @@ public class UsuarioService {
 
         Usuario user = userMapper.usuarioCrearDtoToUser(userDto);
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.password())));
-        System.out.println("Llego.................");
-        System.out.println(userDto.token());
+         System.out.println("Llego.................");
+         System.out.println(userDto.token());
         
-        Set<Rol> roles = new HashSet<>();
+         Set<Rol> roles = new HashSet<>();
         roles.add(rolService.getByRolNombre(Rol.RolNombre.ROLE_USER).get());
         //if (userDto.roles().contains(Rol.RolNombre.ROLE_ADMIN))
         if (userDto.token().equals("admin"))       
@@ -71,7 +71,6 @@ public class UsuarioService {
         Usuario user = userRepository.findByCorreo(correo)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
         return userMapper.toUserDto(user);
-    } 
+    }
 
-    
 }

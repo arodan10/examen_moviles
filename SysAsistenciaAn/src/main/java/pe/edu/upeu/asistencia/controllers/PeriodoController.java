@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pe.edu.upeu.asistencia.controllers;
 
 
@@ -19,6 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.asistencia.models.Periodo;
 import pe.edu.upeu.asistencia.services.PeriodoService;
 
+/**
+ *
+ * @author EP-Ing_Sist.-CALIDAD
+ */
 //@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/asis/periodo")

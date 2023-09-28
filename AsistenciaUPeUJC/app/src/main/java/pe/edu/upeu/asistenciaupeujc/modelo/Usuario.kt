@@ -2,6 +2,7 @@ package pe.edu.upeu.asistenciaupeujc.modelo
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 
 @Entity(tableName = "usuario")
 data class Usuario(
@@ -15,7 +16,9 @@ data class Usuario(
     var dni: String,
     var perfilPrin: String,
     var estado: String,
-    var offlinex: String,
+    var offlinex: String, // Add a list of roles to your Usuario model
+
+
 )
 
 data class UsuarioDto(

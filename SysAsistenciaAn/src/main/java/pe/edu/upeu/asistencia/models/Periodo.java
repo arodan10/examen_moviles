@@ -22,6 +22,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ *
+ * @author EP-Ing_Sist.-CALIDAD
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

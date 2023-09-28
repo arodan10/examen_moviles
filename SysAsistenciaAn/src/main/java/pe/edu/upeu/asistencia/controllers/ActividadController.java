@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pe.edu.upeu.asistencia.controllers;
 
 import com.google.gson.Gson;
@@ -19,6 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.asistencia.models.Actividad;
 import pe.edu.upeu.asistencia.services.ActividadService;
 
+/**
+ *
+ * @author DELL
+ */
 @RestController
 @RequestMapping("/asis/actividad")
 public class ActividadController {

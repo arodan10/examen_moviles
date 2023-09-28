@@ -16,6 +16,8 @@ import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.Pantalla5
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.actividad.ActividadForm
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.actividad.ActividadUI
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.login.LoginScreen
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.materialesx.MaterialesxForm
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.materialesx.MaterialesxUI
 
 @Composable
 fun NavigationHost(
@@ -63,5 +65,18 @@ fun NavigationHost(
             requireNotNull(actId)
             ActividadForm(text = actId, darkMode = darkMode, navController =navController )
         }
+
+        composable(Destinations.MaterialesxUI.route){
+            MaterialesxUI(navegarEditarAct = {newText->navController.navigate(Destinations.MaterialesxForm.passId(newText))}, navController =navController )
+        }
+
+        composable(Destinations.MaterialesxForm.route, arguments = listOf(navArgument("matId"){
+            defaultValue="matId"
+        })){
+                navBackStackEntry -> var matId=navBackStackEntry.arguments?.getString("matId")
+            requireNotNull(matId)
+            MaterialesxForm(text = matId, darkMode = darkMode, navController =navController )
+        }
+
     }
 }

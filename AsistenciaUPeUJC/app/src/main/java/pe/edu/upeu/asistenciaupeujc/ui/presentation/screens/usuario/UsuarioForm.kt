@@ -53,7 +53,7 @@ fun UsuarioForm(
     if (text != "0") {
         usuarioD = Gson().fromJson(text, Usuario::class.java)
     } else {
-        usuarioD = Usuario(0, "", "", "", "", "", "")
+        usuarioD = Usuario(0, "", "", "", "", "", "", "", "", "")
     }
     val isLoading by viewModel.isLoading.observeAsState(false)
     formulario(
@@ -76,42 +76,66 @@ fun formulario(
     viewModel: UsuarioFormViewModel
 ) {
     Log.i("VERRR", "d: " + usuario?.id!!)
-    val person = Usuario(0, "", "", "", "", "", "")
+    val person = Usuario(0, "", "", "", "", "", "", "" ,"", "")
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     Scaffold(modifier = Modifier.padding(top = 60.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)) {
         BuildEasyForms { easyForm ->
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+
                 NameTextField(easyForms = easyForm, text = usuario?.nombres!!, "Nombres:", MyFormKeys.NAME)
                 NameTextField(easyForms = easyForm, text = usuario?.apellidos!!, "Apellidos:", MyFormKeys.APELLIDOS)
                 NameTextField(easyForms = easyForm, text = usuario?.correo!!, "Correo:", MyFormKeys.CORREO)
                 NameTextField(easyForms = easyForm, text = usuario?.password!!, "Password:", MyFormKeys.PASSWORD)
-                NameTextField(easyForms = easyForm, text = usuario?.token!!, "Nombres:", MyFormKeys.NAME)
-                NameTextField(easyForms = easyForm, text = usuario?.dni!!, "Apellidos:", MyFormKeys.APELLIDOS)
-                NameTextField(easyForms = easyForm, text = usuario?.perfilPrin!!, "Correo:", MyFormKeys.CORREO)
+                NameTextField(easyForms = easyForm, text = usuario?.token!!, "Token:", MyFormKeys.TOKEN)
+                NameTextField(easyForms = easyForm, text = usuario?.dni!!, "Apellidos:", MyFormKeys.DNI)
+                NameTextField(easyForms = easyForm, text = usuario?.perfilPrin!!, "Correo:", MyFormKeys.PRIN)
                 var listE = listOf(
                     ComboModel("Activo","Activo"),
                     ComboModel("Desactivo","Desactivo"),
                 )
                 ComboBox(easyForm = easyForm, "Estado:", usuario?.estado!!, listE)
-                NameTextField(easyForms = easyForm, text = usuario?.offlinex!!, "Password:", MyFormKeys.PASSWORD)
+                var listA = listOf(
+                    ComboModel("SI","SI"),
+                    ComboModel("NO","NO"),
+                )
+                ComboBox(easyForm = easyForm, "offlinex:", usuario?.offlinex!!, listA)
 
-                // Add more form fields for other user properties as needed
+                var listR = listOf(
+                    ComboModel("1","ADMIN"),
+                    ComboModel("2","USER"),
+                )
+                ComboBox(easyForm = easyForm, "roles:", roles?.roles!!, listR)
+
 
                 Row(Modifier.align(Alignment.CenterHorizontally)) {
                     AccionButtonSuccess(easyForms = easyForm, "Guardar", id) {
+                        val lista=easyForm.formData()
+
+                        person.nombres = (lista.get(0) as EasyFormsResult.StringResult).value
+                        person.apellidos = (lista.get(1) as EasyFormsResult.StringResult).value
+                        person.correo = (lista.get(2) as EasyFormsResult.StringResult).value
+                        person.password = (lista.get(3) as EasyFormsResult.StringResult).value
+                        person.token = (lista.get(4) as EasyFormsResult.StringResult).value
+                        person.dni = (lista.get(5) as EasyFormsResult.StringResult).value
+                        person.perfilPrin = (lista.get(6) as EasyFormsResult.StringResult).value
+                        person.estado = extractCode((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.offlinex = extractCode((lista.get(8) as EasyFormsResult.GenericStateResult<String>).value)
+
                     }
-                    Spacer()
-                    AccionButtonCancel(easyForms = easyForm, "Cancelar") {
-                        navController.navigate(Destinations.UsuarioUI.route)
-                    }
+
+                }
+                Spacer()
+                AccionButtonCancel(easyForms = easyForm, "Cancelar") {
+                    navController.navigate(Destinations.UsuarioUI.route)
                 }
             }
         }
     }
 }
 
-fun splitCadena(data:String):String{
-    return if(data!="") data.split("-")[0] else ""
+
+fun extractCode(data: String): String {
+    return if (data.isNotEmpty()) data.split("-")[0] else ""
 }

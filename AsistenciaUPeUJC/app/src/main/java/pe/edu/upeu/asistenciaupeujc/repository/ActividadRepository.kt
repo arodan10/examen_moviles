@@ -11,6 +11,7 @@ import pe.edu.upeu.asistenciaupeujc.data.local.dao.ActividadDao
 import pe.edu.upeu.asistenciaupeujc.data.remote.RestActividad
 import pe.edu.upeu.asistenciaupeujc.modelo.Actividad
 import pe.edu.upeu.asistenciaupeujc.utils.TokenUtils
+import pe.edu.upeu.asistenciaupeujc.utils.isNetworkAvailable
 import javax.inject.Inject
 
 interface ActividadRepository {
@@ -40,8 +41,10 @@ class ActividadRepositoryImp @Inject constructor(
         try {
             CoroutineScope(Dispatchers.IO).launch{
                 delay(3000)
-                val data=restActividad.reportarActividad(TokenUtils.TOKEN_CONTENT).body()!!
-                actividadDao.insertarActividades(data)
+                if (isNetworkAvailable(TokenUtils.CONTEXTO_APPX)){
+                    val data=restActividad.reportarActividad(TokenUtils.TOKEN_CONTENT).body()!!
+                    actividadDao.insertarActividades(data)
+                }
             }
         }catch (e:Exception){
             Log.i("ERROR", "Error: ${e.message}")

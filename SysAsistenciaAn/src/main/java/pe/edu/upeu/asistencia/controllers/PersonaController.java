@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import pe.edu.upeu.asistencia.models.Persona;
 import pe.edu.upeu.asistencia.services.PersonaService;
 
+/**
+ *
+ * @author DELL
+ */
 @RestController
 @RequestMapping("/asis/persona")
 public class PersonaController {

@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upeu.asistencia.models.Rol;
 import pe.edu.upeu.asistencia.repositories.RolRepository;
 
+/**
+ *
+ * @author EP-Ing_Sist.-CALIDAD
+ */
 @Service
 @Transactional
 public class RolService {

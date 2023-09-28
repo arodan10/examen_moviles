@@ -52,10 +52,13 @@ public class Usuario {
     private String offlinex;
     
     @NotNull
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "global_usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id"))
-    private Set<Rol> roles = new HashSet<>();  
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+    name = "global_usuario_rol", 
+    joinColumns = @JoinColumn(name = "usuario_id"),
+    inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private Set<Rol> roles = new HashSet<>();
+
     
     @Transient
     private String rolx;
