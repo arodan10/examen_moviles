@@ -2,17 +2,20 @@ package pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.usuario
 
 
 import android.annotation.SuppressLint
-import android.graphics.Color
+import androidx.compose.ui.graphics.Color
 import android.graphics.PorterDuff
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Modifier
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,12 +43,12 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -64,6 +67,7 @@ import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.FabItem
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.LoadingCard
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.MultiFloatingActionButton
 
+
 @Composable
 fun UsuarioUI(
     usuarios: List<Usuario>,
@@ -76,63 +80,81 @@ fun UsuarioUI(
             .padding(16.dp)
     ) {
         items(usuarios) { usuario ->
-            Card(
+            UsuarioCard(
+                usuario = usuario,
+                onEditClick = { onEditClick(usuario) },
+                onDeleteClick = { onDeleteClick(usuario) }
+            )
+        }
+    }
+}
+
+
+@Composable
+fun UsuarioCard(
+    usuario: Usuario,
+    onEditClick: (Usuario) -> Unit,
+    onDeleteClick: (Usuario) -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
+        ),
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .fillMaxWidth(),
+    ){
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Nombres: ${usuario.nombres}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "Apellidos: ${usuario.apellidos}",
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "Correo: ${usuario.correo}",
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                elevation = 8.dp
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                IconButton(
+                    onClick = { onEditClick(usuario) }
                 ) {
-                    Text(
-                        text = "Nombres: ${usuario.nombres}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = Color.Black
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = null,
+                        tint = Color.Gray
                     )
-                    Text(
-                        text = "Apellidos: ${usuario.apellidos}",
-                        fontSize = 16.sp,
-                        color = Color.Black
+                }
+                IconButton(
+                    onClick = { onDeleteClick(usuario) }
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = Color.Red
                     )
-                    Text(
-                        text = "Correo: ${usuario.correo}",
-                        fontSize = 16.sp,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        IconButton(
-                            onClick = { onEditClick(usuario) }
-                        ) {
-                            Icon(
-                                Icons.Default.Edit,
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                        }
-                        IconButton(
-                            onClick = { onDeleteClick(usuario) }
-                        ) {
-                            Icon(
-                                Icons.Default.Delete,
-                                contentDescription = null,
-                                tint = Color.Red
-                            )
-                        }
-                    }
                 }
             }
         }
     }
 }
+

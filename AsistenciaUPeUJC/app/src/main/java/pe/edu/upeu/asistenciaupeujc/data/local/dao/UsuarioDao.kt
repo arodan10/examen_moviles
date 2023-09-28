@@ -9,7 +9,7 @@ import androidx.room.Update
 import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
 
 @Dao
-interface UsuarioDao {
+interface UsuarioxDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarUsuario(usuario: Usuario)

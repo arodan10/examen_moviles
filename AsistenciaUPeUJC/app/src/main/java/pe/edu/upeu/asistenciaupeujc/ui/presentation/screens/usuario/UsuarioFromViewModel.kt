@@ -31,16 +31,15 @@ class UsuarioFormViewModel @Inject constructor(
     fun addUsuario(usuario: Usuario) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i("REAL", usuario.toString())
-            usuario.roles = usuario.rolx.split(", ").toSet()
+            usuario.roles = usuario.rol?.rolNombre?.split(", ")?.toSet() ?: emptySet()
             usuarioRepo.insertarUsuario(usuario)
         }
     }
 
     fun editUsuario(usuario: Usuario) {
         viewModelScope.launch(Dispatchers.IO) {
-            usuario.roles = usuario.rolx.split(", ").toSet()
+            usuario.roles = usuario.rol?.rolNombre?.split(", ")?.toSet() ?: emptySet()
             usuarioRepo.modificarUsuario(usuario)
         }
     }
-
 }

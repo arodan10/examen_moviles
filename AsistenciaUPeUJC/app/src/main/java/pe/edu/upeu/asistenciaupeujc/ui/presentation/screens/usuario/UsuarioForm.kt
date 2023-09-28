@@ -33,6 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
 import pe.edu.upeu.asistenciaupeujc.modelo.ComboModel
+import pe.edu.upeu.asistenciaupeujc.modelo.Rol
 import pe.edu.upeu.asistenciaupeujc.ui.navigation.Destinations
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.Spacer
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.AccionButtonCancel
@@ -49,19 +50,21 @@ fun UsuarioForm(
     navController: NavHostController,
     viewModel: UsuarioFormViewModel = hiltViewModel()
 ) {
-    val usuarioD: Usuario
-    if (text != "0") {
-        usuarioD = Gson().fromJson(text, Usuario::class.java)
+    val usuarioD: Usuario = if (text != "0") {
+        Gson().fromJson(text, Usuario::class.java)
     } else {
-        usuarioD = Usuario(0, "", "", "", "", "", "", "", "", "")
+        val yourRolInstance = Rol(0, "ROLE_ADMIN")
+        Usuario(0, "", "", "", "", "", "", "", "", 1, yourRolInstance)
     }
+
     val isLoading by viewModel.isLoading.observeAsState(false)
+
     formulario(
-        usuarioD.id!!,
-        darkMode,
-        navController,
-        usuarioD,
-        viewModel
+        id = usuarioD.id,
+        darkMode = darkMode,
+        navController = navController,
+        usuario = usuarioD,
+        viewModel = viewModel
     )
 }
 
@@ -76,9 +79,11 @@ fun formulario(
     viewModel: UsuarioFormViewModel
 ) {
     Log.i("VERRR", "d: " + usuario?.id!!)
-    val person = Usuario(0, "", "", "", "", "", "", "" ,"", "")
+    val yourRolInstance = Rol(0, "ROLE_ADMIN")
+    val person = Usuario(0, "", "", "", "", "", "", "", "", 1, yourRolInstance)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
 
     Scaffold(modifier = Modifier.padding(top = 60.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)) {
         BuildEasyForms { easyForm ->
@@ -88,7 +93,6 @@ fun formulario(
                 NameTextField(easyForms = easyForm, text = usuario?.apellidos!!, "Apellidos:", MyFormKeys.APELLIDOS)
                 NameTextField(easyForms = easyForm, text = usuario?.correo!!, "Correo:", MyFormKeys.CORREO)
                 NameTextField(easyForms = easyForm, text = usuario?.password!!, "Password:", MyFormKeys.PASSWORD)
-                NameTextField(easyForms = easyForm, text = usuario?.token!!, "Token:", MyFormKeys.TOKEN)
                 NameTextField(easyForms = easyForm, text = usuario?.dni!!, "Apellidos:", MyFormKeys.DNI)
                 NameTextField(easyForms = easyForm, text = usuario?.perfilPrin!!, "Correo:", MyFormKeys.PRIN)
                 var listE = listOf(
@@ -103,10 +107,10 @@ fun formulario(
                 ComboBox(easyForm = easyForm, "offlinex:", usuario?.offlinex!!, listA)
 
                 var listR = listOf(
-                    ComboModel("1","ADMIN"),
-                    ComboModel("2","USER"),
+                    ComboModel("1","ROLE_ADMIN"),
+                    ComboModel("2","ROLE_USER"),
                 )
-                ComboBox(easyForm = easyForm, "roles:", roles?.roles!!, listR)
+                ComboBox(easyForm = easyForm, "Rol:", usuario?.rolId.toString(), listR)
 
 
                 Row(Modifier.align(Alignment.CenterHorizontally)) {
@@ -117,11 +121,12 @@ fun formulario(
                         person.apellidos = (lista.get(1) as EasyFormsResult.StringResult).value
                         person.correo = (lista.get(2) as EasyFormsResult.StringResult).value
                         person.password = (lista.get(3) as EasyFormsResult.StringResult).value
-                        person.token = (lista.get(4) as EasyFormsResult.StringResult).value
-                        person.dni = (lista.get(5) as EasyFormsResult.StringResult).value
-                        person.perfilPrin = (lista.get(6) as EasyFormsResult.StringResult).value
-                        person.estado = extractCode((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.offlinex = extractCode((lista.get(8) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.dni = (lista.get(4) as EasyFormsResult.StringResult).value
+                        person.perfilPrin = (lista.get(5) as EasyFormsResult.StringResult).value
+                        person.estado = extractCode((lista.get(6) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.offlinex = extractCode((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
+                        val selectedRol = (lista.get(8) as EasyFormsResult.GenericStateResult<String>).value
+                        person.rolId = selectedRol.toLong()
 
                     }
 

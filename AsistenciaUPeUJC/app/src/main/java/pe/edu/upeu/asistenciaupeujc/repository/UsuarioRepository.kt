@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pe.edu.upeu.asistenciaupeujc.data.local.dao.UsuarioDao
+import pe.edu.upeu.asistenciaupeujc.data.local.dao.UsuarioxDao
 import pe.edu.upeu.asistenciaupeujc.data.remote.RestUsuario
 import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
 import pe.edu.upeu.asistenciaupeujc.utils.TokenUtils
@@ -25,7 +24,7 @@ interface UsuarioRepository {
 }
 
 class UsuarioRepositoryImp @Inject constructor(private val restUsuario: RestUsuario,
-                                               private val usuarioDao: UsuarioDao) : UsuarioRepository {
+                                               private val usuarioDao: UsuarioxDao) : UsuarioRepository {
     override suspend fun loginUsuario(user: UsuarioDto): Response<UsuarioResp> {
         return restUsuario.login(user)
     }

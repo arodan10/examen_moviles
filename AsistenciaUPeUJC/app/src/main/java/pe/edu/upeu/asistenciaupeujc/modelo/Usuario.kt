@@ -1,10 +1,19 @@
 package pe.edu.upeu.asistenciaupeujc.modelo
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 
-@Entity(tableName = "usuario")
+@Entity(tableName = "usuario",
+    foreignKeys = [
+        ForeignKey(
+            entity = Rol::class,
+            parentColumns = ["id"],
+            childColumns = ["rolId"],
+            onDelete = ForeignKey.CASCADE // or other actions like ForeignKey.NO_ACTION
+        )
+    ]
+)
 data class Usuario(
     @PrimaryKey(autoGenerate = true)
     var id: Long,
@@ -12,28 +21,19 @@ data class Usuario(
     var apellidos: String,
     var correo: String,
     var password: String,
-    var token: String,
     var dni: String,
     var perfilPrin: String,
     var estado: String,
-    var offlinex: String, // Add a list of roles to your Usuario model
-
-
+    var offlinex: String,
+    var rolId: Long,
+    var roles: Set<String> = emptySet(),
+    var rol: Rol
 )
 
-data class UsuarioDto(
-    var correo: String,
-    var password: String,
-)
-
-data class UsuarioResp(
+@Entity(tableName = "gobal_rol")
+data class Rol(
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
-    val nombres: String,
-    val apellidos: String,
-    val correo: String,
-    val token: String,
-    val dni: String,
-    val perfilPrin: String,
-    val estado: String,
-    val offlinex: String,
+    val rolNombre: String
 )
+
