@@ -10,8 +10,11 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import pe.edu.upeu.asistenciaupeujc.data.local.DbDataSource
 import pe.edu.upeu.asistenciaupeujc.data.local.dao.ActividadDao
+import pe.edu.upeu.asistenciaupeujc.data.local.dao.InscritoxDao
 import pe.edu.upeu.asistenciaupeujc.data.local.dao.MaterialesxDao
+import pe.edu.upeu.asistenciaupeujc.data.local.dao.UsuarioDao
 import pe.edu.upeu.asistenciaupeujc.data.remote.RestActividad
+import pe.edu.upeu.asistenciaupeujc.data.remote.RestInscritox
 import pe.edu.upeu.asistenciaupeujc.data.remote.RestMaterialesx
 import pe.edu.upeu.asistenciaupeujc.data.remote.RestUsuario
 import pe.edu.upeu.asistenciaupeujc.utils.TokenUtils
@@ -67,6 +70,12 @@ class DataSourceModule {
 
     @Singleton
     @Provides
+    fun restInscritox(retrofit: Retrofit): RestInscritox {
+        return retrofit.create(RestInscritox::class.java)
+    }
+
+    @Singleton
+    @Provides
     fun dbDataSource(@ApplicationContext context:Context):DbDataSource{
         return Room.databaseBuilder(context, DbDataSource::class.java, "eventoasistencia_db")
             .fallbackToDestructiveMigration().build()
@@ -81,5 +90,17 @@ class DataSourceModule {
     @Provides
     fun materialesxDao(db:DbDataSource): MaterialesxDao {
         return db.materialesxDao()
+    }
+
+    @Singleton
+    @Provides
+    fun inscritoxDao(db:DbDataSource): InscritoxDao {
+        return db.inscritoxDao()
+    }
+
+    @Singleton
+    @Provides
+    fun usuarioDao(db:DbDataSource): UsuarioDao {
+        return db.usuarioDao()
     }
 }

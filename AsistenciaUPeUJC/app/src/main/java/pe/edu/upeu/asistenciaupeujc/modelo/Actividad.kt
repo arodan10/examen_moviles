@@ -42,7 +42,7 @@ data class ActividadReport(
     var entsal: String,
     var offlinex: String,
     var asistenciaxs: List<Asistenciax>,
-    var inscritos: List<Inscrito>,
+    var inscritos: List<Inscritox>,
     var subactasisxs: List<Subactasisx>,
     var materialesxs: List<Materialesx>,
 )

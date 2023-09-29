@@ -31,16 +31,20 @@ import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
+import pe.edu.upeu.asistenciaupeujc.modelo.Actividad
 import pe.edu.upeu.asistenciaupeujc.modelo.ComboModel
-import pe.edu.upeu.asistenciaupeujc.modelo.Rol
+import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
 import pe.edu.upeu.asistenciaupeujc.ui.navigation.Destinations
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.Spacer
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.AccionButtonCancel
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.AccionButtonSuccess
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.ComboBox
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.ComboBoxTwo
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.DatePickerCustom
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.DropdownMenuCustom
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.MyFormKeys
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.NameTextField
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.form.TimePickerCustom
 import pe.edu.upeu.asistenciaupeujc.utils.TokenUtils
 
 @Composable
@@ -48,92 +52,102 @@ fun UsuarioForm(
     text: String,
     darkMode: MutableState<Boolean>,
     navController: NavHostController,
-    viewModel: UsuarioFormViewModel = hiltViewModel()
+    viewModel: UsuarioFormViewModel= hiltViewModel()
 ) {
-    val usuarioD: Usuario = if (text != "0") {
-        Gson().fromJson(text, Usuario::class.java)
+    val usuarioD:Usuario
+    if (text != "0") {
+        Log.d("UsuarioForm", "JSON Text: $text")
+        usuarioD = Gson().fromJson(text, Usuario::class.java)
     } else {
-        val yourRolInstance = Rol(0, "ROLE_ADMIN")
-        Usuario(0, "", "", "", "", "", "", "", "", 1, yourRolInstance)
+        usuarioD = Usuario(0, "", "", "", "", "", "", "", "")
     }
-
     val isLoading by viewModel.isLoading.observeAsState(false)
-
-    formulario(
-        id = usuarioD.id,
-        darkMode = darkMode,
-        navController = navController,
-        usuario = usuarioD,
-        viewModel = viewModel
+    formulario(usuarioD.id!!,
+        darkMode,
+        navController,
+        usuarioD,
+        viewModel,
     )
+
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "MissingPermission", "CoroutineCreationDuringComposition")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "MissingPermission",
+    "CoroutineCreationDuringComposition"
+)
 @Composable
-fun formulario(
-    id: Long,
-    darkMode: MutableState<Boolean>,
-    navController: NavHostController,
-    usuario: Usuario,
-    viewModel: UsuarioFormViewModel
-) {
-    Log.i("VERRR", "d: " + usuario?.id!!)
-    val yourRolInstance = Rol(0, "ROLE_ADMIN")
-    val person = Usuario(0, "", "", "", "", "", "", "", "", 1, yourRolInstance)
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+fun formulario(id:Long,
+               darkMode: MutableState<Boolean>,
+               navController: NavHostController,
+               usuario: Usuario,
+               viewModel: UsuarioFormViewModel){
+
+    Log.i("VERRR", "d: "+usuario?.id!!)
+    val person=Usuario(0,"","", "","","","","","")
 
 
-    Scaffold(modifier = Modifier.padding(top = 60.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)) {
+    Scaffold(modifier = Modifier.padding(top = 60.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)){
         BuildEasyForms { easyForm ->
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-
-                NameTextField(easyForms = easyForm, text = usuario?.nombres!!, "Nombres:", MyFormKeys.NAME)
-                NameTextField(easyForms = easyForm, text = usuario?.apellidos!!, "Apellidos:", MyFormKeys.APELLIDOS)
-                NameTextField(easyForms = easyForm, text = usuario?.correo!!, "Correo:", MyFormKeys.CORREO)
-                NameTextField(easyForms = easyForm, text = usuario?.password!!, "Password:", MyFormKeys.PASSWORD)
-                NameTextField(easyForms = easyForm, text = usuario?.dni!!, "Apellidos:", MyFormKeys.DNI)
-                NameTextField(easyForms = easyForm, text = usuario?.perfilPrin!!, "Correo:", MyFormKeys.PRIN)
+                NameTextField(easyForms = easyForm, text =actividad?.nombreActividad!!,"Nomb. Actividad:", MyFormKeys.NAME )
                 var listE = listOf(
                     ComboModel("Activo","Activo"),
                     ComboModel("Desactivo","Desactivo"),
                 )
-                ComboBox(easyForm = easyForm, "Estado:", usuario?.estado!!, listE)
-                var listA = listOf(
+                ComboBox(easyForm = easyForm, "Estado:", actividad?.estado!!, listE)
+
+                var listEv = listOf(
                     ComboModel("SI","SI"),
                     ComboModel("NO","NO"),
                 )
-                ComboBox(easyForm = easyForm, "offlinex:", usuario?.offlinex!!, listA)
-
-                var listR = listOf(
-                    ComboModel("1","ROLE_ADMIN"),
-                    ComboModel("2","ROLE_USER"),
-                )
-                ComboBox(easyForm = easyForm, "Rol:", usuario?.rolId.toString(), listR)
+                ComboBoxTwo(easyForm = easyForm, "Evaluar:", actividad?.evaluar!!, listEv)
 
 
-                Row(Modifier.align(Alignment.CenterHorizontally)) {
-                    AccionButtonSuccess(easyForms = easyForm, "Guardar", id) {
+                DatePickerCustom(easyForm = easyForm, label = "Fecha", texts = actividad?.fecha!!, MyFormKeys.FECHA,"yyyy-MM-dd")
+                TimePickerCustom(easyForm = easyForm, label = "Hora", texts = actividad?.horai!!, MyFormKeys.TIME, "HH:mm:ss")
+                TimePickerCustom(easyForm = easyForm, label = "Min. Toler", texts = actividad?.minToler!!, MyFormKeys.TIME_TOLER,"HH:mm:ss")
+                NameTextField(easyForms = easyForm, text = actividad?.mater!!, "Materiales:", MyFormKeys.MATERIALES )
+                DropdownMenuCustom(easyForm = easyForm, label = "Validar Inscripcion:", actividad.validInsc, list =listEv, MyFormKeys.VALIDINSCRIP )
+                DropdownMenuCustom(easyForm = easyForm, label = "Validar Asis. SubActividad:", actividad.asisSubact, list =listEv, MyFormKeys.ASISSUBACT )
+                DropdownMenuCustom(easyForm = easyForm, label = "Reg. Entrada y Salida:", actividad.entsal, list =listEv, MyFormKeys.ENTSAL )
+                DropdownMenuCustom(easyForm = easyForm, label = "Reg. Offline:", actividad.offlinex, list =listEv, MyFormKeys.OFFLINE )
+
+                Row(Modifier.align(Alignment.CenterHorizontally)){
+                    AccionButtonSuccess(easyForms = easyForm, "Guardar", id){
                         val lista=easyForm.formData()
+                        person.nombreActividad=(lista.get(0) as EasyFormsResult.StringResult).value
+                        person.estado=splitCadena((lista.get(1) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.evaluar=splitCadena((lista.get(2) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.fecha=(lista.get(3) as EasyFormsResult.GenericStateResult<String>).value
+                        person.horai=(lista.get(4) as EasyFormsResult.GenericStateResult<String>).value
+                        person.minToler=(lista.get(5) as EasyFormsResult.GenericStateResult<String>).value
+                        person.mater=(lista.get(6) as EasyFormsResult.StringResult).value
+                        person.validInsc= splitCadena((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.asisSubact= splitCadena((lista.get(8) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.entsal= splitCadena((lista.get(9) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.offlinex= splitCadena((lista.get(10) as EasyFormsResult.GenericStateResult<String>).value)
+                        person.userCreate= TokenUtils.USER_LOGIN
 
-                        person.nombres = (lista.get(0) as EasyFormsResult.StringResult).value
-                        person.apellidos = (lista.get(1) as EasyFormsResult.StringResult).value
-                        person.correo = (lista.get(2) as EasyFormsResult.StringResult).value
-                        person.password = (lista.get(3) as EasyFormsResult.StringResult).value
-                        person.dni = (lista.get(4) as EasyFormsResult.StringResult).value
-                        person.perfilPrin = (lista.get(5) as EasyFormsResult.StringResult).value
-                        person.estado = extractCode((lista.get(6) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.offlinex = extractCode((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
-                        val selectedRol = (lista.get(8) as EasyFormsResult.GenericStateResult<String>).value
-                        person.rolId = selectedRol.toLong()
-
+                        if (id==0.toLong()){
+                            Log.i("AGREGAR", "M:"+ person.mater)
+                            Log.i("AGREGAR", "VI:"+ person.validInsc)
+                            Log.i("AGREGAR", "SA:"+ person.asisSubact)
+                            Log.i("AGREGAR", "ES:"+ person.entsal)
+                            Log.i("AGREGAR", "OF:"+ person.offlinex)
+                            viewModel.addActividad(person)
+                        }else{
+                            person.id=id
+                            Log.i("MODIFICAR", "M:"+person)
+                            viewModel.editActividad(person)
+                        }
+                        navController.navigate(Destinations.ActividadUI.route)
                     }
-
-                }
-                Spacer()
-                AccionButtonCancel(easyForms = easyForm, "Cancelar") {
-                    navController.navigate(Destinations.UsuarioUI.route)
+                    Spacer()
+                    AccionButtonCancel(easyForms = easyForm, "Cancelar"){
+                        navController.navigate(Destinations.ActividadUI.route)
+                    }
                 }
             }
         }
@@ -141,6 +155,6 @@ fun formulario(
 }
 
 
-fun extractCode(data: String): String {
-    return if (data.isNotEmpty()) data.split("-")[0] else ""
+fun splitCadena(data:String):String{
+    return if(data!="") data.split("-")[0] else ""
 }

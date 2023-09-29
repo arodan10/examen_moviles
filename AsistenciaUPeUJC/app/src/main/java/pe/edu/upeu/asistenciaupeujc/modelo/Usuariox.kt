@@ -1,11 +1,11 @@
 package pe.edu.upeu.asistenciaupeujc.modelo
 
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 data class Usuariox(
-    @PrimaryKey(autoGenerate = true)
-    var id: Long,
     var nombres: String,
     var apellidos: String,
     var correo: String,
@@ -14,9 +14,7 @@ data class Usuariox(
     var dni: String,
     var perfilPrin: String,
     var estado: String,
-    var offlinex: String, // Add a list of roles to your Usuario model
-
-
+    var offlinex: String
 )
 
 data class UsuarioDto(

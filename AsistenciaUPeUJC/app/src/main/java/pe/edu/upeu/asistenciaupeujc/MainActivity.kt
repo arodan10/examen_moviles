@@ -1,4 +1,4 @@
-    package pe.edu.upeu.asistenciaupeujc
+package pe.edu.upeu.asistenciaupeujc
 
 
 import android.Manifest
@@ -161,6 +161,7 @@ fun MainScreen(
         Destinations.Pantalla5,
         Destinations.ActividadUI,
         Destinations.MaterialesxUI,
+        Destinations.InscritoxUI
     )
     val navigationItems2 = listOf(
         Destinations.Pantalla1,

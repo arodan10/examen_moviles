@@ -34,11 +34,26 @@ sealed class Destinations(
     }
 
     object MaterialesxUI: Destinations("materialesxUI","Adm. Materialesxes", Icons.Filled.DateRange)
-    object UsuarioUI: Destinations("usuarioUI","Adm. usuarios", Icons.Filled.DateRange)
 
     object MaterialesxForm: Destinations("MaterialesxForm?matId={matId}", "Form Materialesx", Icons.Filled.Add){
         fun passId(matId:String?):String{
             return "materialesxForm?matId=$matId"
+        }
+    }
+
+    object InscritoxUI: Destinations("inscritoxUI","Adm. Inscritoxes", Icons.Filled.DateRange)
+
+    object InscritoxForm: Destinations("InscritoxForm?matId={matId}", "Form Inscritox", Icons.Filled.Add){
+        fun passId(matId:String?):String{
+            return "inscritoxForm?matId=$matId"
+        }
+    }
+
+    object UsuarioUI: Destinations("usuarioUI","Adm. Usuarios", Icons.Filled.DateRange)
+
+    object UsuarioForm: Destinations("UsuarioForm?matId={usId}", "Form Usuario", Icons.Filled.Add){
+        fun passId(usId:String?):String{
+            return "usuarioForm?matId=$usId"
         }
     }
 

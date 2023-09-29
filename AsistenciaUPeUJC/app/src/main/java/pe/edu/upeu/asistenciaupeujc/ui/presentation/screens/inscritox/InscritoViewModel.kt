@@ -1,4 +1,4 @@
-package pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.usuario
+package pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.inscritox
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,34 +8,33 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import pe.edu.upeu.asistenciaupeujc.modelo.Actividad
-import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
-import pe.edu.upeu.asistenciaupeujc.repository.ActividadRepository
-import pe.edu.upeu.asistenciaupeujc.repository.UsuarioRepository
+import pe.edu.upeu.asistenciaupeujc.modelo.InscritoxConActividad
+import pe.edu.upeu.asistenciaupeujc.repository.InscritoxRepository
+import pe.edu.upeu.asistenciaupeujc.repository.MaterialesxRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class UsuarioViewModel @Inject constructor(
-    private val userRepo: UsuarioRepository,
+class InscritoViewModel @Inject constructor(
+    private val inscrixRepo: InscritoxRepository,
 ) : ViewModel(){
     private val _isLoading: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>(false)
     }
-    val user: LiveData<List<Usuario>> by lazy {
-        userRepo.reportarUsuarios()
+    val activ: LiveData<List<InscritoxConActividad>> by lazy {
+        inscrixRepo.reportarInscritoxes()
     }
     val isLoading: LiveData<Boolean> get() = _isLoading
-    fun addUsuario() {
+    fun addInscritox() {
         if (_isLoading.value == false)
             viewModelScope.launch (Dispatchers.IO) {
                 _isLoading.postValue(true)
             }
     }
 
-    fun deleteUsuario(toDelete: Usuario) {
+    fun deleteInscritox(toDelete: InscritoxConActividad) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i("ELIMAR", toDelete.toString())
-            userRepo.deleteUsuario(toDelete);
+            inscrixRepo.deleteInscritox(toDelete);
         }
     }
 

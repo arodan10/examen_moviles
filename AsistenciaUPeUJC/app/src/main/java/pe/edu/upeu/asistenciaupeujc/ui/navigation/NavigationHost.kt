@@ -15,6 +15,8 @@ import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.Pantalla4
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.Pantalla5
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.actividad.ActividadForm
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.actividad.ActividadUI
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.inscritox.InscritoxForm
+import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.inscritox.InscritoxUI
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.login.LoginScreen
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.materialesx.MaterialesxForm
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.screens.materialesx.MaterialesxUI
@@ -76,6 +78,19 @@ fun NavigationHost(
                 navBackStackEntry -> var matId=navBackStackEntry.arguments?.getString("matId")
             requireNotNull(matId)
             MaterialesxForm(text = matId, darkMode = darkMode, navController =navController )
+        }
+
+
+        composable(Destinations.InscritoxUI.route){
+            InscritoxUI(navegarEditarAct = {newText->navController.navigate(Destinations.InscritoxForm.passId(newText))}, navController =navController )
+        }
+
+        composable(Destinations.InscritoxForm.route, arguments = listOf(navArgument("matId"){
+            defaultValue="matId"
+        })){
+                navBackStackEntry -> var matId=navBackStackEntry.arguments?.getString("matId")
+            requireNotNull(matId)
+            InscritoxForm(text = matId, darkMode = darkMode, navController =navController )
         }
 
     }
