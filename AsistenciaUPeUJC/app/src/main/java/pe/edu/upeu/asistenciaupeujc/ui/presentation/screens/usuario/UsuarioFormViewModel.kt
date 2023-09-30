@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UsuarioFormViewModel @Inject constructor(
-    private val userRepo: UsuarioRepository,
+    private val userrRepo: UsuarioRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(){
     private val _isLoading: MutableLiveData<Boolean> by lazy {
@@ -25,21 +25,21 @@ class UsuarioFormViewModel @Inject constructor(
     }
 
     fun getUsuario(idX: Long): LiveData<Usuario> {
-        return userRepo.buscarUsuarioId(idX)
+        return userrRepo.buscarUsuarioId(idX)
     }
 
     val isLoading: LiveData<Boolean> get() = _isLoading
 
 
-    fun addActividad(usuario: Usuario){
+    fun addUsuario(usuario: Usuario){
         viewModelScope.launch (Dispatchers.IO){
             Log.i("REAL", usuario.toString())
-            userRepo.insertarUsuario(usuario)
+            userrRepo.insertarUsuario(usuario)
         }
     }
-    fun editActividad(usuario: Usuario){
+    fun editUsuario(usuario: Usuario){
         viewModelScope.launch(Dispatchers.IO){
-            userRepo.modificarRemoteUsuario(usuario)
+            userrRepo.modificarRemoteUsuario(usuario)
         }
     }
 }

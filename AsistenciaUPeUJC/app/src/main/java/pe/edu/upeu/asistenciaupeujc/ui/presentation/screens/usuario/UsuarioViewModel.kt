@@ -16,13 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UsuarioViewModel @Inject constructor(
-    private val userRepo: UsuarioRepository,
+    private val userrRepo: UsuarioRepository,
 ) : ViewModel(){
     private val _isLoading: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>(false)
     }
     val user: LiveData<List<Usuario>> by lazy {
-        userRepo.reportarUsuarios()
+        userrRepo.reportarUsuarios()
     }
     val isLoading: LiveData<Boolean> get() = _isLoading
     fun addUsuario() {
@@ -35,7 +35,7 @@ class UsuarioViewModel @Inject constructor(
     fun deleteUsuario(toDelete: Usuario) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i("ELIMAR", toDelete.toString())
-            userRepo.deleteUsuario(toDelete);
+            userrRepo.deleteUsuario(toDelete);
         }
     }
 

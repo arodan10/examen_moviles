@@ -85,62 +85,54 @@ fun formulario(id:Long,
                viewModel: UsuarioFormViewModel){
 
     Log.i("VERRR", "d: "+usuario?.id!!)
-    val person=Usuario(0,"","", "","","","","","")
+    val user=Usuario(0,"","", "","","","","","")
 
 
     Scaffold(modifier = Modifier.padding(top = 60.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)){
         BuildEasyForms { easyForm ->
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                NameTextField(easyForms = easyForm, text =actividad?.nombreActividad!!,"Nomb. Actividad:", MyFormKeys.NAME )
+                NameTextField(easyForms = easyForm, text =usuario?.nombres!!,"Nombres:", MyFormKeys.NAME )
+                NameTextField(easyForms = easyForm, text =usuario?.apellidos!!,"Apellidos:", MyFormKeys.APELLIDO )
+                NameTextField(easyForms = easyForm, text =usuario?.correo!!,"Correo:", MyFormKeys.CORREO )
+                NameTextField(easyForms = easyForm, text =usuario?.password!!,"Contraseña:", MyFormKeys.CONTRA )
+                NameTextField(easyForms = easyForm, text =usuario?.dni!!,"DNI:", MyFormKeys.DNI )
+                NameTextField(easyForms = easyForm, text =usuario?.perfilPrin!!,"Prin:", MyFormKeys.PRIN )
+
                 var listE = listOf(
                     ComboModel("Activo","Activo"),
                     ComboModel("Desactivo","Desactivo"),
                 )
-                ComboBox(easyForm = easyForm, "Estado:", actividad?.estado!!, listE)
+                ComboBox(easyForm = easyForm, "Estado:", usuario?.estado!!, listE)
 
-                var listEv = listOf(
-                    ComboModel("SI","SI"),
-                    ComboModel("NO","NO"),
+                var listOff = listOf(
+                    ComboModel("Si","Si"),
+                    ComboModel("No","No"),
                 )
-                ComboBoxTwo(easyForm = easyForm, "Evaluar:", actividad?.evaluar!!, listEv)
+                ComboBox(easyForm = easyForm, "offlinex:", usuario?.offlinex!!, listOff)
 
 
-                DatePickerCustom(easyForm = easyForm, label = "Fecha", texts = actividad?.fecha!!, MyFormKeys.FECHA,"yyyy-MM-dd")
-                TimePickerCustom(easyForm = easyForm, label = "Hora", texts = actividad?.horai!!, MyFormKeys.TIME, "HH:mm:ss")
-                TimePickerCustom(easyForm = easyForm, label = "Min. Toler", texts = actividad?.minToler!!, MyFormKeys.TIME_TOLER,"HH:mm:ss")
-                NameTextField(easyForms = easyForm, text = actividad?.mater!!, "Materiales:", MyFormKeys.MATERIALES )
-                DropdownMenuCustom(easyForm = easyForm, label = "Validar Inscripcion:", actividad.validInsc, list =listEv, MyFormKeys.VALIDINSCRIP )
-                DropdownMenuCustom(easyForm = easyForm, label = "Validar Asis. SubActividad:", actividad.asisSubact, list =listEv, MyFormKeys.ASISSUBACT )
-                DropdownMenuCustom(easyForm = easyForm, label = "Reg. Entrada y Salida:", actividad.entsal, list =listEv, MyFormKeys.ENTSAL )
-                DropdownMenuCustom(easyForm = easyForm, label = "Reg. Offline:", actividad.offlinex, list =listEv, MyFormKeys.OFFLINE )
+
 
                 Row(Modifier.align(Alignment.CenterHorizontally)){
                     AccionButtonSuccess(easyForms = easyForm, "Guardar", id){
                         val lista=easyForm.formData()
-                        person.nombreActividad=(lista.get(0) as EasyFormsResult.StringResult).value
-                        person.estado=splitCadena((lista.get(1) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.evaluar=splitCadena((lista.get(2) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.fecha=(lista.get(3) as EasyFormsResult.GenericStateResult<String>).value
-                        person.horai=(lista.get(4) as EasyFormsResult.GenericStateResult<String>).value
-                        person.minToler=(lista.get(5) as EasyFormsResult.GenericStateResult<String>).value
-                        person.mater=(lista.get(6) as EasyFormsResult.StringResult).value
-                        person.validInsc= splitCadena((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.asisSubact= splitCadena((lista.get(8) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.entsal= splitCadena((lista.get(9) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.offlinex= splitCadena((lista.get(10) as EasyFormsResult.GenericStateResult<String>).value)
-                        person.userCreate= TokenUtils.USER_LOGIN
+                        user.nombres=(lista.get(0) as EasyFormsResult.StringResult).value
+                        user.apellidos=(lista.get(1) as EasyFormsResult.StringResult).value
+                        user.correo=(lista.get(2) as EasyFormsResult.StringResult).value
+                        user.password=(lista.get(3) as EasyFormsResult.StringResult).value
+                        user.dni=(lista.get(4) as EasyFormsResult.StringResult).value
+                        user.perfilPrin=(lista.get(5) as EasyFormsResult.StringResult).value
+                        user.estado=splitCadena((lista.get(6) as EasyFormsResult.GenericStateResult<String>).value)
+                        user.offlinex= splitCadena((lista.get(7) as EasyFormsResult.GenericStateResult<String>).value)
 
                         if (id==0.toLong()){
-                            Log.i("AGREGAR", "M:"+ person.mater)
-                            Log.i("AGREGAR", "VI:"+ person.validInsc)
-                            Log.i("AGREGAR", "SA:"+ person.asisSubact)
-                            Log.i("AGREGAR", "ES:"+ person.entsal)
-                            Log.i("AGREGAR", "OF:"+ person.offlinex)
-                            viewModel.addActividad(person)
+                            Log.i("ESTADO", "ES:"+ user.estado)
+                            Log.i("AGREGAR", "OF:"+ user.offlinex)
+                            viewModel.addUsuario(user)
                         }else{
-                            person.id=id
-                            Log.i("MODIFICAR", "M:"+person)
-                            viewModel.editActividad(person)
+                            user.id=id
+                            Log.i("MODIFICAR", "M:"+user)
+                            viewModel.editUsuario(user)
                         }
                         navController.navigate(Destinations.ActividadUI.route)
                     }

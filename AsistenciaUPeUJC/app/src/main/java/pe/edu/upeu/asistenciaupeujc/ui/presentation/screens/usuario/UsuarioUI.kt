@@ -48,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.google.gson.Gson
-import pe.edu.upeu.asistenciaupeujc.modelo.Actividad
+import pe.edu.upeu.asistenciaupeujc.modelo.Usuario
 import pe.edu.upeu.asistenciaupeujc.ui.navigation.Destinations
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.ConfirmDialog
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.Spacer
@@ -56,6 +56,7 @@ import pe.edu.upeu.asistenciaupeujc.utils.TokenUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import pe.edu.upeu.asistenciaupeujc.R
+import pe.edu.upeu.asistenciaupeujc.modelo.UsuarioReport
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.BottomNavigationBar
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.FabItem
 import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.LoadingCard
@@ -65,16 +66,15 @@ import pe.edu.upeu.asistenciaupeujc.ui.presentation.components.MultiFloatingActi
 fun UsuarioUI (navegarEditarAct: (String) -> Unit, viewModel:
 UsuarioViewModel= hiltViewModel(), navController: NavHostController
 ){
-    val actis by viewModel.activ.observeAsState(arrayListOf())
+    val us by viewModel.user.observeAsState(arrayListOf())
     val isLoading by viewModel.isLoading.observeAsState(false)
-    Log.i("VERX", ""+actis!!.size )
+    Log.i("VERX", ""+us!!.size )
 
     MyApp(navController, onAddClick = {
-        //viewModel.addUser()
         navegarEditarAct((0).toString())
     }, onDeleteClick = {
-        viewModel.deleteActividad(it)
-    }, actis, isLoading,
+        viewModel.deleteUsuario(it)
+    }, us, isLoading,
         onEditClick = {
             val jsonString = Gson().toJson(it)
             navegarEditarAct(jsonString)
@@ -90,15 +90,15 @@ val formatoFecha: DateTimeFormatter? = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 @Composable
 fun MyApp( navController: NavHostController,
     onAddClick: (() -> Unit)? = null,
-    onDeleteClick: ((toDelete: Actividad) -> Unit)? = null,
-    actividades: List<Actividad>,
+    onDeleteClick: ((toDelete: Usuario) -> Unit)? = null,
+    usuarios: List<Usuario>,
     isLoading: Boolean,
-    onEditClick: ((toPersona: Actividad) -> Unit)? = null,
+    onEditClick: ((toPersona: Usuario) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     //val navController = rememberNavController()
     val navigationItems2 = listOf(
-        Destinations.ActividadUI,
+        Destinations.UsuarioUI,
         Destinations.Pantalla1,
         Destinations.Pantalla2,
         Destinations.Pantalla3
@@ -113,7 +113,7 @@ fun MyApp( navController: NavHostController,
             Icons.Filled.ShoppingCart,
             "Shopping Cart"
         ) {
-            val toast = Toast.makeText(context, "Hola Mundo", Toast.LENGTH_LONG) // in Activity
+            val toast = Toast.makeText(context, "Hola Mundo", Toast.LENGTH_LONG)
             toast.view!!.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.SRC_IN)
             toast.show()
         },
@@ -147,7 +147,7 @@ fun MyApp( navController: NavHostController,
                 //.offset(x = (16).dp, y = (-32).dp),
                 userScrollEnabled= true,
             ){
-                var itemCount = actividades.size
+                var itemCount = usuarios.size
                 if (isLoading) itemCount++
                 items(count = itemCount) { index ->
                     var auxIndex = index;
@@ -156,7 +156,7 @@ fun MyApp( navController: NavHostController,
                             return@items LoadingCard()
                         auxIndex--
                     }
-                    val actividad = actividades[auxIndex]
+                    val usuario = usuarios[auxIndex]
                     Card(
                         shape = RoundedCornerShape(8.dp),
                         elevation = CardDefaults.cardElevation(
@@ -173,7 +173,7 @@ fun MyApp( navController: NavHostController,
                                     //.clip(CircleShape)
                                     .clip(RoundedCornerShape(8.dp)),
                                 painter = rememberImagePainter(
-                                    data = actividad.evaluar,
+                                    data = usuario.estado,
                                     builder = {
                                         placeholder(R.drawable.bg)
                                         error(R.drawable.bg)
@@ -186,11 +186,7 @@ fun MyApp( navController: NavHostController,
                             Column(
                                 Modifier.weight(1f),
                             ) {
-                                Text("${actividad.nombreActividad} - ${actividad.estado}", fontWeight = FontWeight.Bold)
-                                val datex = LocalDate.parse(actividad.fecha!!, DateTimeFormatter.ISO_DATE)
-                                var fecha=formatoFecha?.format(datex)
-                                Text(""+fecha, color =
-                                MaterialTheme.colorScheme.primary)
+                                Text("${usuario.nombres} - ${usuario.estado}", fontWeight = FontWeight.Bold)
                             }
 
                            Spacer()
@@ -204,7 +200,7 @@ fun MyApp( navController: NavHostController,
                                 ConfirmDialog(
                                     message = "Esta seguro de eliminar?",
                                     onConfirm = {
-                                        onDeleteClick?.invoke(actividad)
+                                        onDeleteClick?.invoke(usuario)
                                         showDialog.value=false
                                     },
                                     onDimins = {
@@ -216,7 +212,7 @@ fun MyApp( navController: NavHostController,
                             IconButton(onClick = {
                                 Log.i("VERTOKEN", "Holas")
                                 Log.i("VERTOKEN", TokenUtils.TOKEN_CONTENT)
-                                onEditClick?.invoke(actividad)
+                                onEditClick?.invoke(usuario)
                             }) {
                                 Icon(
                                     Icons.Filled.Edit,
